@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced To-Do List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #app {
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            width: 400px;
+            max-width: 90%;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        #taskList {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .task {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            background-color: #e0e0e0;
+            color: #333;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease-out, slideInLeft 0.5s ease-out;
+            cursor: pointer;
+            transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, background-color 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-20px);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        .task:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            background-color: #c0c0c0;
+        }
+
+        .completed {
+            background-color: #7fbf7f;
+            color: #fff;
+            text-decoration: line-through;
+        }
+
+        .delete-btn {
+            cursor: pointer;
+            color: #ff4d4d;
+            font-weight: bold;
+            border: none;
+            background: none;
+            outline: none;
+        }
+
+        .add-task-form {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            animation: slideInUp 0.5s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        #newTask {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        #addBtn {
+            cursor: pointer;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #4CAF50;
+            color: #fff;
+            font-weight: bold;
+            outline: none;
+            animation: rotate 0.5s ease-out;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #madeBy {
+            text-align: center;
+            margin-top: 20px;
+            color: #777;
+            font-size: 12px;
+            animation: fadeIn 0.5s ease-out, slideInDown 0.5s ease-out;
+        }
+
+        @keyframes slideInDown {
+            from {
+                transform: translateY(-20px);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        /* New Styles for Additional Features */
+        .priority {
+            margin-top: 10px;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .due-date {
+            margin-top: 10px;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <ul id="taskList"></ul>
+    <div class="add-task-form">
+        <input type="text" id="newTask" placeholder="Add a new task">
+        <button id="addBtn" onclick="addTask()">Add</button>
+        <select class="priority">
+            <option value="" disabled selected hidden>Priority</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+        </select>
+        <input type="date" class="due-date">
+    </div>
+    <div id="madeBy">Made by Neal Aringale</div>
+</div>
+
+<script>
+    function addTask() {
+        const taskInput = document.getElementById('newTask');
+        const taskText = taskInput.value.trim();
+
+        if (taskText !== '') {
+            const taskList = document.getElementById('taskList');
+            const prioritySelect = document.querySelector('.priority');
+            const dueDateInput = document.querySelector('.due-date');
+
+            const taskElement = document.createElement('li');
+            taskElement.className = 'task animate__animated animate__fadeIn animate__faster';
+            taskElement.innerHTML = `
+                <span>${taskText}</span>
+                <button class="delete-btn" onclick="deleteTask(this)">Delete</button>
+                <input type="checkbox" onchange="completeTask(this)">
+                <span class="priority"></span>
+                <span class="due-date"></span>
+            `;
+
+            taskList.appendChild(taskElement);
+
+            // Display priority and due date
+            const priorityValue = prioritySelect.value;
+            const dueDateValue = dueDateInput.value;
+
+            taskElement.querySelector('.priority').textContent = `Priority: ${priorityValue}`;
+            taskElement.querySelector('.due-date').textContent = `Due Date: ${dueDateValue}`;
+
+            // Style and save tasks
+            taskElement.style.backgroundColor = getPriorityColor(priorityValue);
+            saveTasks();
+
+            // Clear input fields
+            taskInput.value = '';
+            prioritySelect.selectedIndex = 0;
+            dueDateInput.value = '';
+        }
+    }
+
+    function deleteTask(deleteButton) {
+        const taskElement = deleteButton.parentNode;
+        const taskList = document.getElementById('taskList');
+
+        taskElement.classList.remove('animate__fadeIn');
+        taskElement.classList.add('animate__fadeOut');
+        setTimeout(() => {
+            taskList.removeChild(taskElement);
+            saveTasks();
+        }, 500);
+    }
+
+    function completeTask(checkbox) {
+        const taskElement = checkbox.parentNode;
+        taskElement.classList.toggle('completed');
+
+        saveTasks();
+    }
+
+    function getPriorityColor(priority) {
+        switch (priority) {
+            case 'high':
+                return '#ff6666'; // Red for high priority
+            case 'medium':
+                return '#ffcc66'; // Yellow for medium priority
+            case 'low':
+                return '#66ff66'; // Green for low priority
+            default:
+                return '#e0e0e0'; // Default color
+        }
+    }
+
+    function saveTasks() {
+        const taskList = document.getElementById('taskList');
+        const tasks = [];
+
+        taskList.querySelectorAll('.task span').forEach(task => {
+            const taskElement = task.parentNode;
+            tasks.push({
+                text: task.textContent,
+                completed: taskElement.classList.contains('completed'),
+                priority: taskElement.querySelector('.priority').textContent.split(': ')[1].toLowerCase(),
+                dueDate: taskElement.querySelector('.due-date').textContent.split(': ')[1]
+            });
+        });
+
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
+
+    function loadTasks() {
+        const taskList = document.getElementById('taskList');
+        const savedTasks = localStorage.getItem('tasks');
+
+        if (savedTasks) {
+            const tasks = JSON.parse(savedTasks);
+
+            tasks.forEach(task => {
+                const taskElement = document.createElement('li');
+                taskElement.className = 'task';
+                if (task.completed) {
+                    taskElement.classList.add('completed');
+                }
+                taskElement.innerHTML = `
+                    <span>${task.text}</span>
+                    <button class="delete-btn" onclick="deleteTask(this)">Delete</button>
+                    <input type="checkbox" onchange="completeTask(this)" ${task.completed ? 'checked' : ''}>
+                    <span class="priority">Priority: ${task.priority}</span>
+                    <span class="due-date">Due Date: ${task.dueDate}</span>
+                `;
+
+                taskList.appendChild(taskElement);
+                taskElement.style.backgroundColor = getPriorityColor(task.priority);
+            });
+        }
+    }
+
+    loadTasks();
+</script>
+
+</body>
+</html>
