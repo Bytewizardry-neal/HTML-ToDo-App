@@ -1,0 +1,56 @@
+#Made By Neal Aringale
+
+Overview
+This repository contains the code for a To-Do app/website created using HTML. The app allows users to manage their tasks, set priorities, and add due dates for effective task management.
+
+Features
+Task Management: Add, delete, and mark tasks as completed.
+Priority Settings: Set task priority (high, medium, low) during creation.
+Due Dates: Add due dates to tasks for better organization.
+Simple and Responsive Design: User-friendly interface for seamless task management.
+Getting Started
+Follow the steps below to get the To-Do app/website up and running:
+
+Prerequisites
+Web browser
+Installation
+Clone the repository:
+
+bash
+Copy code
+git clone https://github.com/your-username/todo-app.git
+Navigate to the project directory:
+
+bash
+Copy code
+cd todo-app
+Open index.html in your web browser.
+
+Usage
+Add a Task:
+
+Type the task in the input field.
+Click the "Add" button.
+Delete a Task:
+
+Click the "Delete" button next to the task.
+Mark as Completed:
+
+Check the checkbox next to the task.
+Set Priority:
+
+Choose priority from the dropdown during task creation.
+Set Due Date:
+
+Select a due date from the calendar during task creation.
+Customization
+Feel free to customize the app to meet your specific requirements. You can modify the HTML, CSS, and JavaScript files as needed.
+
+Credits
+Neal Aringale: Creator of the To-Do app/website.
+License
+This project is licensed under the MIT License.
+
+Acknowledgments
+Animate.css for animations.
+Roboto Font for the font used.
